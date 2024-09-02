@@ -1,0 +1,12 @@
+
+public enum TokenType {
+	IDENTIFIER,
+	OPERATOR,
+	CONSTANT,
+	LITERAL,
+	KEYWORDS,
+	SYMBOLS,
+	EOL,
+	EOF,
+	DIRECTIVE;
+}

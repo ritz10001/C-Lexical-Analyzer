@@ -1,0 +1,14 @@
+#include<stdio.h>
+#include<conio.h>
+int main() {
+    int a = 8;
+    float b = 20.5;
+    char c = 'A';
+    string d = "hello, world!";
+ 
+    if (a >= b) {
+        return 1;
+    } else {
+        return 0;
+    }
+}

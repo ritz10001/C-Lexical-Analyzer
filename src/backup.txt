@@ -1,0 +1,61 @@
+public boolean isIdentifier(String token) {
+		if(token.matches("[A-Za-z_][A-Za-z0-9_]*")) {
+			return true;
+		}
+		return false;
+	}
+	public boolean isConstant(String token) {
+		return isIntegerConstant(token) || isFloatingConstant(token)
+		|| isCharacterConstant(token);
+	}
+	public boolean isIntegerConstant(String token) {
+		return token.matches("/^(0|[1-9][0-9]*|0[oO]?[0-7]+|0[xX][0-9a-fA-F]+|0[bB][01]+)[lL]?$/"); 
+	}
+	public boolean isFloatingConstant(String token) {
+		return token.matches("[0-9]*\\.[0-9]+([eE][+-]?[0-9]+)?") ||
+	           token.matches("[0-9]+[eE][+-]?[0-9]+");
+	}
+	public boolean isCharacterConstant(String token) {
+		return token.matches("'(\\\\.|[^\\\\'])'"); // Handles escaped characters
+	}
+	public void tokenize(String text) {
+		String[] lines = text.split("\n");
+		Pattern pattern = Pattern.compile("\\w+|==|!=|<=|>=|&&|\\|\\||[{}();,+\\-*/=]");
+        
+		
+		for(int i = 0; i < lines.length; i++) {
+			String[] tokens = lines[i].split("(?<=\\W)(?=\\w)|(?<=\\w)(?=\\W)|(?<=[^\\.])(?=\\.)|(?<=\\.)\\b|\\s+");
+			for (String token : tokens) {
+	            if (!token.isBlank()) {
+	                System.out.println("Token: " + token);
+	            }
+	        }
+			for(String token : tokens) {
+				String trimmedToken = token.trim();
+				//check for primitives
+				if(Arrays.asList(primitives).contains(trimmedToken)) {
+					tokenMap.get(TokenType.PRIMITIVES).add(trimmedToken);
+				}
+				//check for keywords
+				if(Arrays.asList(keywords).contains(trimmedToken)) {
+					tokenMap.get(TokenType.KEYWORDS).add(trimmedToken);
+				}
+				//check for operators
+				if(Arrays.asList(operators).contains(trimmedToken)) {
+					tokenMap.get(TokenType.OPERATOR).add(trimmedToken);
+				}
+				//check for identifiers
+				if(isIdentifier(trimmedToken) && 
+				!(Arrays.asList(primitives).contains(trimmedToken))
+				&& !(Arrays.asList(keywords).contains(trimmedToken))) {
+					tokenMap.get(TokenType.IDENTIFIER).add(trimmedToken);
+				}
+				//check for constants
+				if(isConstant(trimmedToken)) {
+					tokenMap.get(TokenType.CONSTANT).add(trimmedToken);
+				}
+			}
+			
+		}
+		System.out.println(tokenMap);
+	}
